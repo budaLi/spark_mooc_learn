@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="JAVA_MODULE" version="4">
+//可以避免右键无法创建scala文件的问题
+<component>
+    <orderEntry type="library" name="scala-sdk-2.13.0" level="application" />
+</component>
+</module>
