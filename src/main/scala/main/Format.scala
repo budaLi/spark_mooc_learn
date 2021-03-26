@@ -12,7 +12,17 @@ object Format {
 
     val spark = SparkSession.builder().master("local").appName("format").getOrCreate()
     var rdd = spark.sparkContext.textFile("E:\\桌面\\工作算法\\spark_mooc_learn\\src\\main\\resources\\init.log")
-    rdd.take(10).foreach(println)
+    //将数据切分为 ip 日期 流量 url
+    rdd.map(line=>{
+      var line_datas = line.split(" ")
+      var ip = line_datas(0)
+      //其中日期需要特殊转换
+      var date = line_datas(3)+line_datas(4)
+      var traffic = line_datas(9)
+      var url = line_datas(10)
+
+      (ip,date,traffic,url)
+    }).foreach(println)
 
   }
 }
