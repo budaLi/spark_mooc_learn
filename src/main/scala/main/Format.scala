@@ -1,6 +1,7 @@
 package main
 
 import org.apache.spark.sql.SparkSession
+import utils.DateUtil
 
 //创建基于scala的maven项目要注意：
 //1. 创建项目时需要选择scala
@@ -14,15 +15,15 @@ object Format {
     var rdd = spark.sparkContext.textFile("E:\\桌面\\工作算法\\spark_mooc_learn\\src\\main\\resources\\init.log")
     //将数据切分为 ip 日期 流量 url
     rdd.map(line=>{
-      var line_datas = line.split(" ")
-      var ip = line_datas(0)
+      val line_datas = line.split(" ")
+      val ip = line_datas(0)
       //其中日期需要特殊转换
-      var date = line_datas(3)+line_datas(4)
-      var traffic = line_datas(9)
-      var url = line_datas(10)
-
-      (ip,date,traffic,url)
-    }).foreach(println)
+      val date = line_datas(3)+ " " +line_datas(4)
+      val traffic = line_datas(9)
+      val url = line_datas(10).replace("\"", "")
+      DateUtil.parse(date) + "\t" + url + "\t" + traffic + "\t" + ip
+    })
+      .saveAsTextFile("E:\\桌面\\工作算法\\spark_mooc_learn\\src\\main\\resources\\Format")
 
   }
 }
