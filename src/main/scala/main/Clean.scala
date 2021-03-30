@@ -8,7 +8,7 @@ object Clean {
   def main(args: Array[String]): Unit = {
 
       val sc = SparkSession.builder().master("local[2]").appName("CleanJob").getOrCreate()
-      val rdd = sc.sparkContext.textFile("E:\\桌面\\工作算法\\spark_mooc_learn\\src\\main\\resources\\Format")
+      val rdd = sc.sparkContext.textFile("E:\\桌面\\工作算法\\spark_mooc_learn\\src\\main\\resources\\format.log")
 
 
       // 用封装好的转换方法和定义的好的结构体 解析文件的每一行数据 要注意选择createDataFrame函数时参数不同
