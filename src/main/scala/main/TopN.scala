@@ -1,6 +1,10 @@
 package main
 
-import org.apache.spark.sql.{SparkSession,DataFrame}
+import caseclass.DayTop
+import org.apache.spark.sql.{DataFrame, SparkSession}
+import utils.Dao
+
+import scala.collection.mutable.ListBuffer
 
 //使用agg等函数需要导入
 import org.apache.spark.sql.functions._
@@ -59,6 +63,32 @@ object TopN {
     println(sqlText2)
     val dayTopDF = spark.sql(sqlText)
     dayTopDF.show(false)
+
+    //TODO 将topN的数据插入数据库
+    try {
+      dayTopDF.foreachPartition(partition=>{
+        //准备dayTop类型的listBuffer
+        val list = new ListBuffer[DayTop]
+        //对于每个partition的数据要放入listBuffer
+        //对于partition的每个record都要获取其数据并放入listBuffer
+        partition.foreach(record=>{
+          val day = record.getAs[String]("day")
+          val courseId = record.getAs[Long]("courseId")
+          val times = record.getAs[Long]("times")
+
+          //将取出来的数据通过caseclass封装后加入listBuffer
+          list.append(DayTop(day,courseId,times))
+        })
+
+        //通过封装好的工具包存入数据库
+        Dao.insertDayTop(list)
+        }
+      )
+    }
+    catch {
+      case e:Exception=>e.printStackTrace()
+    }
+
 
   }
 }
