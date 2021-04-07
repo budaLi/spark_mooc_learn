@@ -1,6 +1,6 @@
 package main
 
-import caseclass.DayTop
+import caseclass.{DayTop, TrafficTop}
 import org.apache.spark.sql.{DataFrame, SparkSession}
 import utils.Dao
 
@@ -26,8 +26,8 @@ object TopN {
 
     //    count_topN_times_by_dataframe(sc,df,day,courseType)
     //      count_topN_times_by_sql(sc,df,day,courseType)
-    count_topN_traffic_by_dataframe(sc, df, day, courseType)
-    //      count_topN_traffic_by_sql(sc,df,day,courseType)
+    //    count_topN_traffic_by_dataframe(sc, df, day, courseType)
+    count_topN_traffic_by_sql(sc, df, day, courseType)
 
   }
 
@@ -119,5 +119,28 @@ object TopN {
       "order by totle_traffic desc"
     val topN_traffic = spark.sql(sql_text)
     topN_traffic.show(10)
+
+
+    //入库
+    try {
+      topN_traffic.foreachPartition(partition => {
+        var traffic_list = new ListBuffer[TrafficTop]
+        partition.foreach(data => {
+          val day = data.getAs[String]("day")
+          val courseId = data.getAs[Long]("courseId")
+          val traffic = data.getAs[Long]("totle_traffic")
+
+          traffic_list.append(TrafficTop(day, courseId, traffic))
+        })
+
+        Dao.insert_traffic_topN(traffic_list)
+      })
+
+
+    }
+    catch {
+      case e: Exception => e.printStackTrace()
+    }
+
   }
 }
