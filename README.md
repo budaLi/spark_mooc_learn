@@ -35,3 +35,7 @@ maven项目创建，修改基本学会了，引入的第三方包在我的电脑
 1.数据仓库的准备
 2.数据的处理
 3.实时数据流
+
+### 2021-4-7
+1. 对links,movies,ratings,tags的数据清洗。
+2. git commit后但未push的版本回退：VCS->reset head ->填写HEAD~n  n代表回退的版本 
