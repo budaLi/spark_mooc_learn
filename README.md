@@ -43,3 +43,9 @@ maven项目创建，修改基本学会了，引入的第三方包在我的电脑
 ### 2021-4-8 
 
 配置了Hive好久...太坑，还是不行
+
+
+### 2021-4-13
+
+考虑放弃Hive,数据存储采用Hdfs+Mysql 
+spark源码解析系列：https://github.com/lw-lin/CoolplaySpark

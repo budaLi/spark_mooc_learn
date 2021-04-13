@@ -1,31 +1,34 @@
 package datacleaner
-
+import java.io.File
 import caseclass.{Links, Movies, Ratings, Tags}
 import org.apache.spark.sql.hive._
 import org.apache.spark.sql.{SaveMode, SparkSession}
 
-///清洗当前项目的所有数据 并存入hive数据库
+///清洗当前项目的所有数据 并存入Mysql数据库
 object ETL {
   def main(args: Array[String]): Unit = {
     //通过enableHiveSupport 使用hive
-    val sc = SparkSession.builder().enableHiveSupport().master("local").appName("ETL").getOrCreate()
+    //    val warehouseLocation = "/user/hive/warehouse"
+    //    val sc = SparkSession.builder().appName("ETL").config("spark.sql.warehouse.dir", warehouseLocation).enableHiveSupport().master("local").getOrCreate()
+    //    val sc = SparkSession.builder().appName("ETL").enableHiveSupport().master("local").getOrCreate()
+    val sc = SparkSession.builder().appName("ETL").master("local").getOrCreate()
 
     //TODO 这里要注意导入sparkContext的隐式声明才可以toDF()
     import sc.sqlContext.implicits._
 
     //设置处理数据的最小分区
-    val minPartitions = 8
+    val minPartitions = 2
 
 
     /**
      * 加载links数据
      */
-    val links = sc.sparkContext.textFile("E:\\桌面\\工作算法\\spark_mooc_learn\\src\\movie\\resource\\links.txt", minPartitions = minPartitions)
+    val links = sc.sparkContext.textFile("D:\\movie\\links.txt", minPartitions = minPartitions)
       //需要清洗数据 比如142 数据不全
       .filter(!_.endsWith(","))
       .map(line => line.split(","))
       .map(
-        //可通过  x.trim().toInt 改变其数据类型
+        //        可通过  x.trim().toInt 改变其数据类型
         line => Links(line(0).trim().toInt, line(1).trim().toInt, line(2).trim().toInt))
       .toDF()
 
@@ -81,15 +84,14 @@ object ETL {
     tags.show(10)
 
     //将数据转换为parquet格式
-    links.write.mode(SaveMode.Overwrite).parquet("E:\\桌面\\工作算法\\spark_mooc_learn\\src\\movie\\resource\\tmp\\links")
-    //    movies.write.mode(SaveMode.Overwrite).parquet("E:\\桌面\\工作算法\\spark_mooc_learn\\src\\movie\\resource\\tmp\\movies")
-    //    rating.write.mode(SaveMode.Overwrite).parquet("E:\\桌面\\工作算法\\spark_mooc_learn\\src\\movie\\resource\\tmp\\rating")
-    //    tags.write.mode(SaveMode.Overwrite).parquet("E:\\桌面\\工作算法\\spark_mooc_learn\\src\\movie\\resource\\tmp\\tags")]
+    links.write.mode(SaveMode.Overwrite).parquet("D:/tmp/links")
+    movies.write.mode(SaveMode.Overwrite).parquet("/tmp/movies")
+    rating.write.mode(SaveMode.Overwrite).parquet("/tmp/rating")
+    tags.write.mode(SaveMode.Overwrite).parquet("/tmp/tags")
 
-    links.createOrReplaceTempView("links")
-    sc.sql("drop table if exists links")
-    sc.sql("create table if not exists links(movieId int,imdbId int,tmdbId int) stored as parquet")
-    sc.sql("load data inpath 'E:\\桌面\\工作算法\\spark_mooc_learn\\src\\movie\\resource\\tmp\\links' overwrite into table links")
+
+    val df = sc.read.format("parquet").load("E:\\桌面\\工作算法\\spark_mooc_learn\\src\\movie\\resource\\tmp\\links")
+    df.show(10)
 
 
   }
