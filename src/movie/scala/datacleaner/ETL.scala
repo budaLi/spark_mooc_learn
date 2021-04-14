@@ -84,14 +84,13 @@ object ETL {
     tags.show(10)
 
     //将数据转换为parquet格式
-    links.write.mode(SaveMode.Overwrite).parquet("D:/tmp/links")
+    links.write.mode(SaveMode.Overwrite).parquet("/tmp/links")
     movies.write.mode(SaveMode.Overwrite).parquet("/tmp/movies")
     rating.write.mode(SaveMode.Overwrite).parquet("/tmp/rating")
     tags.write.mode(SaveMode.Overwrite).parquet("/tmp/tags")
 
 
-    val df = sc.read.format("parquet").load("E:\\桌面\\工作算法\\spark_mooc_learn\\src\\movie\\resource\\tmp\\links")
-    df.show(10)
+
 
 
   }

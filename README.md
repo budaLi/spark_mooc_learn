@@ -49,3 +49,12 @@ maven项目创建，修改基本学会了，引入的第三方包在我的电脑
 
 考虑放弃Hive,数据存储采用Hdfs+Mysql 
 spark源码解析系列：https://github.com/lw-lin/CoolplaySpark
+
+### 2021-4-14 
+梳理下现有数据：
+1.链接数据：Links(movieId: Long, imdbId: Long, tmdbId: Long)
+2.电影数据：Movies(movieId: Int, title: String, genres: String)
+3.评分数据：Ratings(userId: Int, movieId: Int, rating: Double, timestamp: Int)
+4.标签数据：Tags(userId: Int, movieId: Int, tag: String, timestamp: Int)
+
+离线推荐主要指根据现有数据，为每个用户推荐其评分较高的类型的电影。
