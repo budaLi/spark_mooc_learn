@@ -58,3 +58,7 @@ spark源码解析系列：https://github.com/lw-lin/CoolplaySpark
 4.标签数据：Tags(userId: Int, movieId: Int, tag: String, timestamp: Int)
 
 离线推荐主要指根据现有数据，为每个用户推荐其评分较高的类型的电影。
+
+
+### 2021-5-13  
+学习hive sql 
