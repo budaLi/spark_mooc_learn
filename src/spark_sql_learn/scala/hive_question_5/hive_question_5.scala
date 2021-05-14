@@ -15,7 +15,7 @@ import org.apache.spark.sql.SparkSession
 object hive_question_5 {
 
   def main(args: Array[String]): Unit = {
-    val spark = SparkSession.builder().appName("hive_question_6").master("local").getOrCreate()
+    val spark = SparkSession.builder().appName("hive_question_5").master("local").getOrCreate()
     import spark.sqlContext.implicits._
     val rdd = spark.sparkContext.textFile("E:\\桌面\\工作算法\\spark_mooc_learn\\src\\spark_sql_learn\\scala\\hive_question_5\\data")
     val header = rdd.first()
