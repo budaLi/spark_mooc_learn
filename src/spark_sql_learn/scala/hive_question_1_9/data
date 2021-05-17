@@ -1,0 +1,4 @@
+order_id	order_type	order_time
+111	N	10:00
+111	A	10:05
+111	B	10:10
