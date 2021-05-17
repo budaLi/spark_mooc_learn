@@ -3,6 +3,7 @@ package hive_question_1_11
 import org.apache.spark.sql.SparkSession
 
 
+
 // 每个用户连续登陆的最大天数
 //结果如下：
 //uid cnt_days
